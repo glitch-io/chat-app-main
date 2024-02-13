@@ -8,39 +8,33 @@ import {
   TextMsg,
   TimeLine,
 } from "./MsgTypes";
-function Message() {
+function Message({ menu }) {
   return (
-    <Box
-      width={"100%"}
-      sx={{ flexGrow: 1, height: "100%", overflow: "scroll" }}
-    >
-      <Box p={3}>
-        <Stack spacing={3}>
-          {Chat_History.map((el) => {
-            switch (el.type) {
-              case "divider":
-                return <TimeLine el={el} />;
-              case "msg":
-                switch (el.subtype) {
-                  case "img":
-                    return <MediaMsg el={el} />;
-                  case "doc":
-                    return <DocMsg el={el} />;
-                  case "link":
-                    return <LinkMsg el={el} />;
-                  case "reply":
-                    return <ReplyMsg el={el} />;
-                  default:
-                    //msg
-                    return <TextMsg el={el} />;
-                }
-                break;
-              default:
-                return <></>;
-            }
-          })}
-        </Stack>
-      </Box>
+    <Box p={3}>
+      <Stack spacing={3}>
+        {Chat_History.map((el) => {
+          switch (el.type) {
+            case "divider":
+              return <TimeLine el={el} />;
+            case "msg":
+              switch (el.subtype) {
+                case "img":
+                  return <MediaMsg el={el} menu={menu} />;
+                case "doc":
+                  return <DocMsg el={el} menu={menu} />;
+                case "link":
+                  return <LinkMsg el={el} menu={menu} />;
+                case "reply":
+                  return <ReplyMsg el={el} menu={menu} />;
+                default:
+                  //msg
+                  return <TextMsg el={el} menu={menu} />;
+              }
+            default:
+              return <></>;
+          }
+        })}
+      </Stack>
     </Box>
   );
 }
