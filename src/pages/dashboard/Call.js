@@ -1,25 +1,32 @@
-import React, { useState } from "react";
 import {
   Box,
+  Divider,
+  IconButton,
   Stack,
   Typography,
-  IconButton,
   Link,
-  Divider,
 } from "@mui/material";
-import { MagnifyingGlass, Plus } from "phosphor-react";
-import { useTheme } from "@mui/material/styles";
-import { SimpleBarStyle } from "../../components/Scrollbar";
-import { ChatList } from "../../data";
-import ChatElement from "../../components/ChatElement";
+import { MagnifyingGlass, Phone } from "phosphor-react";
+import React, { useEffect, useState } from "react";
 import {
   Search,
   SearchIconWrapper,
   StyledInputBase,
 } from "../../components/Search";
-import CreateGroup from "../../sections/main/CreateGroup";
 
-const Group = () => {
+import { useTheme } from "@mui/material/styles";
+import { SimpleBarStyle } from "../../components/Scrollbar";
+import { CallLogElement } from "../../components/CallElement";
+import StartCall from "../../sections/dashboard/StartCall";
+import { useDispatch, useSelector } from "react-redux";
+// import { FetchCallLogs } from "../../redux/slices/app";
+
+const Call = () => {
+  //   const dispatch = useDispatch()
+  //   useEffect(() => {
+  //     dispatch(FetchCallLogs());
+  //   }, []);
+  const { call_logs } = useSelector((state) => state.app);
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleCloseDialog = () => {
@@ -37,8 +44,9 @@ const Group = () => {
         <Box
           sx={{
             overflowY: "scroll",
+
             height: "100vh",
-            width: 320,
+            width: 340,
             backgroundColor: (theme) =>
               theme.palette.mode === "light"
                 ? "#F8FAFF"
@@ -53,8 +61,9 @@ const Group = () => {
               justifyContent="space-between"
               direction="row"
             >
-              <Typography variant="h5">Groups</Typography>
+              <Typography variant="h5">Call Log</Typography>
             </Stack>
+
             <Stack sx={{ width: "100%" }}>
               <Search>
                 <SearchIconWrapper>
@@ -66,49 +75,37 @@ const Group = () => {
                 />
               </Search>
             </Stack>
+
             <Stack
               justifyContent={"space-between"}
               alignItems={"center"}
               direction={"row"}
             >
               <Typography variant="subtitle2" sx={{}} component={Link}>
-                Create New Group
+                Start a conversation
               </Typography>
               <IconButton onClick={handleOpenDialog}>
-                <Plus style={{ color: theme.palette.primary.main }} />
+                <Phone style={{ color: theme.palette.primary.main }} />
               </IconButton>
             </Stack>
             <Divider />
             <Stack sx={{ flexGrow: 1, overflow: "scroll", height: "100%" }}>
               <SimpleBarStyle timeout={500} clickOnTrack={false}>
                 <Stack spacing={2.4}>
-                  <Typography variant="subtitle2" sx={{ color: "#676667" }}>
-                    Pinned
-                  </Typography>
-                  {/* Chat List */}
-                  {ChatList.filter((el) => el.pinned).map((el, idx) => {
-                    return <ChatElement {...el} />;
-                  })}
-                  <Typography variant="subtitle2" sx={{ color: "#676667" }}>
-                    All Chats
-                  </Typography>
-                  {/* Chat List */}
-                  {ChatList.filter((el) => !el.pinned).map((el, idx) => {
-                    return <ChatElement {...el} />;
+                  {call_logs.map((el, idx) => {
+                    return <CallLogElement key={idx} {...el} />;
                   })}
                 </Stack>
               </SimpleBarStyle>
             </Stack>
           </Stack>
         </Box>
-
-        {/* Right */}
       </Stack>
       {openDialog && (
-        <CreateGroup open={openDialog} handleClose={handleCloseDialog} />
+        <StartCall open={openDialog} handleClose={handleCloseDialog} />
       )}
     </>
   );
 };
 
-export default Group;
+export default Call;
